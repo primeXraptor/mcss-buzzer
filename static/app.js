@@ -28,7 +28,7 @@ async function api(path, data) {
     const result = await response.json();
 
     if (!response.ok) {
-        throw Error(result.error || 'Request failed.');
+        throw Error(result.error || 'Failed.');
     }
 
     return result;
@@ -154,7 +154,7 @@ async function loadQuestions() {
                     $('cancel-edit').hidden = false;
 
                     $('text').focus();
-                } else if (confirm('Delete this question?')) {
+                } else if (confirm('Delete?')) {
                     try {
                         await api('/api/admin/delete', { id: q.id });
                         await loadQuestions();
@@ -210,7 +210,7 @@ if (role === 'admin') {
         button.onclick = async () => {
             if (
                 button.dataset.action === 'reset' &&
-                !confirm('Reset the quiz to the beginning?')
+                !confirm('Reset?')
             ) {
                 return;
             }
