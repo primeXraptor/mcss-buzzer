@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="csrf" content="{{ session.csrf }}">
+    <title></title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body data-role="{{ role }}">
+    <main>
+        {% if role == 'home' %}
+
+            
+
+            <nav class="roles">
+                <a href="/contestant/1">Contestant 1</a>
+                <a href="/contestant/2">Contestant 2</a>
+                <a href="/wall">Wall</a>
+                <a href="/announcer">Announcer</a>
+                <a href="/admin">Admin</a>
+            </nav>
+
+        {% else %}
+
+            <section id="live">
+
+                {% if role == 'admin' %}
+
+                    <header>
+                        
+                        <span id="connection" role="status"></span>
+                    </header>
+
+                    <div class="admin-grid">
+
+                        <section class="card">
+                            <div class="live-head">
+                                <span id="status">Waiting</span>
+                                <strong id="timer">00:00</strong>
+                            </div>
+
+                            <p id="winner">Winner: </p>
+
+                            <div class="controls">
+                                <button data-action="start" id="advance">Start</button>
+                                <button data-action="pause">Pause</button>
+                                <button data-action="resume">Resume</button>
+                                <button data-action="reopen">Reopen buzzer</button>
+                                <button data-action="reset" class="secondary">Reset</button>
+                            </div>
+
+                        </section>
+
+                        <section class="card">
+
+                            <h2 id="editor-title"></h2>
+
+                            <form id="editor">
+                                <textarea id="text" rows="5" maxlength="5000" required></textarea>
+
+                                <label for="duration">seconds</label>
+                                <input id="duration" type="number" min="1" max="3600" value="30" required>
+
+                                <div class="controls">
+                                    <button>Save</button>
+                                    <button type="button" id="cancel-edit" class="secondary" hidden>
+                                        Cancel edit
+                                    </button>
+                                </div>
+                            </form>
+                        </section>
+
+                    </div>
+
+                    <section class="card question-list">
+                        <h2>Questions</h2>
+                        <ol id="questions"></ol>
+                    </section>
+
+                {% elif role == 'contestant' %}
+
+                    <div class="buzzer-layout">
+                        <div id="timer" class="big-timer">00:00</div>
+
+                        <button id="buzz" disabled>
+                            Click or Enter<br>
+                            <span>to trigger</span>
+                        </button>
+
+                        <span id="connection" role="status"></span>
+                    </div>
+
+                {% else %}
+
+                    <div class="display-layout">
+
+                        <div id="timer" class="big-timer">00:00</div>
+
+                        <h1 id="question">Waiting</h1>
+                        <p id="winner" aria-live="polite"></p>
+
+                        <span id="connection" role="status"></span>
+                    </div>
+
+                {% endif %}
+
+            </section>
+
+        {% endif %}
+
+        <p id="error" role="alert" hidden></p>
+    </main>
+
+    <script src="/static/app.js" defer></script>
+</body>
+
+</html>
