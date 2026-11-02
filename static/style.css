@@ -334,3 +334,38 @@ body[data-role=admin] {
         min-height: 50vh;
     }
 }
+
+body[data-role=contestant] main {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+}
+
+body[data-role=contestant] .buzzer-layout {
+    min-height: 100dvh;
+    gap: 0;
+}
+
+body[data-role=contestant] #buzz {
+    min-height: 100vh;
+    min-height: 100dvh;
+    border: 0;
+    border-radius: 0;
+}
+
+body[data-role=contestant] #connection {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    text-align: center;
+    pointer-events: none;
+}
+
+body[data-role=contestant] #error {
+    position: fixed;
+    bottom: 40px;
+    left: 16px;
+    right: 16px;
+    margin: 0;
+}

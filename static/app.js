@@ -115,8 +115,10 @@ setInterval(() => {
 
     const seconds = Math.ceil(left);
 
-    $('timer').textContent =
-        `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
+    if ($('timer')) {
+        $('timer').textContent =
+            `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
+    }
 
     if ($('buzz') && left <= 0) {
         $('buzz').disabled = true;
