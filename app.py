@@ -1,3 +1,4 @@
+import logging
 import os
 import secrets
 import sqlite3
@@ -11,6 +12,7 @@ from flask import Flask, jsonify, render_template, request, session
 def create_app(test_config=None):
     app = Flask(__name__)
     app.url_map.redirect_defaults = False
+    app.logger.setLevel(logging.INFO)
 
     app.config.update(
         SECRET_KEY=os.environ.get('SECRET_KEY') or secrets.token_hex(32),
@@ -107,6 +109,14 @@ def create_app(test_config=None):
         response.headers['Cache-Control'] = 'no-store'
         response.headers['X-Content-Type-Options'] = 'nosniff'
         response.headers['X-Frame-Options'] = 'DENY'
+
+        # Successful state polling happens five times per second per client.
+        if request.path != '/api/state' or response.status_code >= 400:
+            app.logger.info(
+                '%s %s -> %s role=%s seat=%s',
+                request.method, request.path, response.status_code,
+                session.get('role', 'guest'), session.get('team_id', '-')
+            )
 
         return response
 
@@ -272,6 +282,10 @@ def create_app(test_config=None):
                 ), 409
 
             state['revision'] += 1
+            app.logger.info(
+                'Quiz action=%s status=%s revision=%s',
+                action, state['status'], state['revision']
+            )
 
             return jsonify(snapshot())
 
@@ -291,6 +305,11 @@ def create_app(test_config=None):
                 state['status'] != 'running'
                 or data.get('revision') != state['revision']
             ):
+                app.logger.info(
+                    'Buzz rejected seat=%s status=%s revision=%s current_revision=%s',
+                    session['team_id'], state['status'],
+                    data.get('revision'), state['revision']
+                )
                 return jsonify(error='Buzzer is closed.'), 409
 
             state.update(
@@ -303,6 +322,10 @@ def create_app(test_config=None):
                 winner=state['teams'][session['team_id']]
             )
 
+            app.logger.info(
+                'Buzz accepted seat=%s winner=%s remaining=%.3fs',
+                session['team_id'], state['winner'], state['remaining']
+            )
             return jsonify(snapshot())
 
     return app
@@ -313,7 +336,7 @@ if __name__ == '__main__':
 
     app = create_app()
 
-    print('server is live', flush=True)
+    app.logger.info('Server listening on 0.0.0.0:5000')
 
     serve(
         app,
