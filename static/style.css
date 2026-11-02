@@ -276,7 +276,8 @@ body[data-role=wall] .eyebrow {
     color: #93a7c2;
 }
 
-body[data-role=wall] #winner {
+body[data-role=wall] #winner,
+body[data-role=announcer] #winner {
     color: #6ee7b7;
 }
 

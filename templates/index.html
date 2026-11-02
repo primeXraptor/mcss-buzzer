@@ -95,7 +95,9 @@
 
                     <div class="display-layout">
 
+                        {% if role != 'announcer' %}
                         <div id="timer" class="big-timer">00:00</div>
+                        {% endif %}
 
                         <h1 id="question">Waiting</h1>
                         <p id="winner" aria-live="polite"></p>
