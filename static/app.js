@@ -253,7 +253,7 @@ async function buzz() {
 
         error();
     } catch (e) {
-        error(e.message);
+        error(e.message === 'Buzzer is closed.' ? '' : e.message);
     } finally {
         sending = false;
     }
