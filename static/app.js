@@ -91,7 +91,7 @@ async function poll() {
         render(state);
     } catch (e) {
         connected = false;
-        $('connection').textContent = 'Disconnected · reconnecting';
+        $('connection').textContent = 'Disconnected';
 
         if ($('buzz')) {
             $('buzz').disabled = true;
