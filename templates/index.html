@@ -6,7 +6,13 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="csrf" content="{{ session.csrf }}">
     <title></title>
+    {% if role == 'admin' %}
+    <style>
+        body { font-family: Arial, sans-serif; }
+    </style>
+    {% else %}
     <link rel="stylesheet" href="/static/style.css">
+    {% endif %}
 </head>
 
 <body data-role="{{ role }}">
