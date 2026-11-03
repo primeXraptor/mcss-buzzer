@@ -28,7 +28,7 @@ async function enableSound() {
         await audioContext.resume();
 
         if (!buzzerBuffer) {
-            const response = await fetch('/static/buzzer.m4a');
+            const response = await fetch('/static/buzzer.mp3');
             if (!response.ok) throw Error('Sound download failed.');
             buzzerBuffer = await audioContext.decodeAudioData(await response.arrayBuffer());
         }
