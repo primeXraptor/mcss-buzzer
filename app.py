@@ -43,7 +43,7 @@ def create_app(test_config=None):
         deadline=None,
         remaining=0,
         winner=None,
-        teams={'1': 'Contestant 1', '2': 'Contestant 2'},
+        teams={'1': 'Maliyadeva Balika College', '2': 'Holy Family Balika College'},
         revision=0
     )
 
