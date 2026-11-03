@@ -42,7 +42,7 @@ async function enableSound() {
 }
 
 function playBuzzer(state) {
-    if (state.status !== 'buzzed' || state.revision === lastBuzzRevision) return;
+    if (role !== 'admin' || state.status !== 'buzzed' || state.revision === lastBuzzRevision) return;
     lastBuzzRevision = state.revision;
 
     // Opening a page mid-round must not replay an old buzz.
