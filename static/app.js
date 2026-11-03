@@ -15,6 +15,47 @@ const labels = {
     expired: 'Time’s up'
 };
 
+let audioContext = null;
+let buzzerBuffer = null;
+let lastBuzzRevision = null;
+
+async function enableSound() {
+    const button = $('enable-sound');
+    button.disabled = true;
+
+    try {
+        audioContext ||= new (window.AudioContext || window.webkitAudioContext)();
+        await audioContext.resume();
+
+        if (!buzzerBuffer) {
+            const response = await fetch('/static/buzzer.m4a');
+            if (!response.ok) throw Error('Sound download failed.');
+            buzzerBuffer = await audioContext.decodeAudioData(await response.arrayBuffer());
+        }
+
+        button.textContent = 'Sound enabled';
+    } catch (e) {
+        button.textContent = 'Enable sound (retry)';
+    } finally {
+        button.disabled = false;
+    }
+}
+
+function playBuzzer(state) {
+    if (state.status !== 'buzzed' || state.revision === lastBuzzRevision) return;
+    lastBuzzRevision = state.revision;
+
+    // Opening a page mid-round must not replay an old buzz.
+    if (!latest || !buzzerBuffer || audioContext?.state !== 'running') return;
+
+    const source = audioContext.createBufferSource();
+    source.buffer = buzzerBuffer;
+    source.connect(audioContext.destination);
+    source.start();
+}
+
+if ($('enable-sound')) $('enable-sound').onclick = enableSound;
+
 async function api(path, data) {
     const response = await fetch(path, {
         method: data === undefined ? 'GET' : 'POST',
@@ -40,6 +81,7 @@ function error(message = '') {
 }
 
 function render(state) {
+    playBuzzer(state);
     latest = state;
     sampledAt = performance.now();
 
